@@ -25,19 +25,18 @@ library(webdriver)
 ################################################################################
 
 ## 접속합 url 설정
-urlSearch <- "https://cafe.naver.com/infinitebuying"
+url <- "https://cafe.naver.com/infinitebuying"
 
 ## 크롬 드라이버 버전 확인
 binman::list_versions('chromedriver')
 
 ## 크롬 브라우저
-wdman::chrome(port=4567L)
+wdman::chrome(port = 4567L)
 
 ## 셀레니움 서버
 rD <- rsDriver(
   port = 4567L,
-  browser = 'chrome',
-  check = TRUE
+  browser = 'chrome'
 )
 
 remDr <- rD$client
@@ -56,7 +55,7 @@ remDr <- remoteDriver(
 remDr$open()
 
 ## url 접속
-remDr$navigate(urlSearch)
+remDr$navigate(url)
 
 ## 게시판 열기기
 remDr$findElement(using = "xpath", value = '/html/body/div[3]/div/div[6]/div[1]/div[2]/div[2]/ul[4]/li[1]/a')$clickElement()
