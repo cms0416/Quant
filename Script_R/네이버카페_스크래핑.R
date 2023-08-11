@@ -3,7 +3,7 @@
 # selenium 실행 : 윈도우에서 cmd를 통해 명령 프롬프트를 연 후, 아래 명령어를 입력(cmd창은 계속 열어둔다.)
 #
 # cd C:\Rselenium
-# java -Dwebdriver.gecko.driver="geckodriver.exe" -jar selenium-server-standalone-4.0.0-alpha-2.jar -port 4445
+# java -Dwebdriver.gecko.driver="geckodriver.exe" -jar selenium-server-standalone-4.0.0-alpha-2.jar -port 4567
 #
 ###############################################################################################################
 
@@ -11,16 +11,38 @@
 ## 라이브러리 로드
 library(tidyverse)
 library(data.table)
+library(readxl)
+library(writexl)
+
 library(RSelenium)
 library(seleniumPipes)
 library(rvest)
 library(httr)
-library(readxl)
-library(writexl)
+
+library(wdman)
+library(binman)
+library(webdriver)
 ################################################################################
 
+## 접속합 url 설정
 urlSearch <- "https://cafe.naver.com/infinitebuying"
 
+## 크롬 드라이버 버전 확인
+binman::list_versions('chromedriver')
+
+## 크롬 브라우저
+wdman::chrome(port=4567L)
+
+## 셀레니움 서버
+rD <- rsDriver(
+  port = 4567L,
+  browser = 'chrome',
+  check = TRUE
+)
+
+remDr <- rD$client
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ch = wdman::chrome(port=4567L)
 
 ## 4567번 포트와 크롬 연결
