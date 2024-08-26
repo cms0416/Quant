@@ -33,6 +33,8 @@ rD <- rsDriver(
 
 remDr <- rD$client
 
+remDr$close()
+remDr$open()
 
 ## url 접속
 remDr$navigate(url)
