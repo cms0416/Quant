@@ -54,10 +54,24 @@ def vr_simulation(prices, G, band_width, pool_limit, cycles=14):
         portfolio_values.append(portfolio_value + pool)
         cash_balances.append(pool)
     
-    # 결과 반환
-    returns = (portfolio_values[-1] - initial_value) / initial_value
-    volatility = np.std(np.diff(portfolio_values) / portfolio_values[:-1])
+    # 결과 반환 조건 추가
+    if len(portfolio_values) > 1:  # 최소 2개 데이터 필요
+        portfolio_values = np.array(portfolio_values)  # 리스트를 numpy 배열로 변환
+        diffs = np.diff(portfolio_values)  # 차분 계산
+        valid_mask = portfolio_values[:-1] > 0  # 유효한 값 필터 (portfolio_values[:-1]와 맞춤)
+        if valid_mask.sum() > 0:  # 유효한 데이터가 있을 때만 계산
+            valid_diffs = diffs[valid_mask[:len(diffs)]]  # valid_mask를 diffs 길이에 맞게 자르기
+            valid_portfolio = portfolio_values[:-1][valid_mask[:len(diffs)]]
+            volatility = np.std(valid_diffs / valid_portfolio)
+        else:
+            volatility = 0
+        returns = (portfolio_values[-1] - initial_value) / initial_value
+    else:  # 데이터가 부족하면 기본 값 반환
+        returns = 0
+        volatility = 0
+    
     return returns, volatility, portfolio_values
+
 
 # %% 4. 다양한 변수 조합 시뮬레이션
 G_values = [10, 20, 50]  # G 값
