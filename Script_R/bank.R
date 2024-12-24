@@ -80,7 +80,14 @@ path_신한은행_이체결과 <- list.files(
 신한은행_거래내역_합치기 <- 신한은행_거래내역_수정 %>% 
   left_join(신한은행_이체결과_수정 %>% select(-시간), 
             by = c("날짜", "내용", "금액", "구분")) %>% 
-  distinct(pick(날짜:잔액), .keep_all = TRUE)
+  distinct(pick(날짜:잔액), .keep_all = TRUE) %>% 
+  # 이체인 경우 정리
+  mutate(구분 = case_when(
+    내용 == "조문수" ~ "이체",
+    내용 == "하지영" ~ "이체",
+    str_detect(내용, "VR") ~ "이체",
+    TRUE ~ 구분
+  ))
 
 
 
